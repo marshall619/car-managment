@@ -57,6 +57,7 @@ fun AboutScreen(navHostController: NavHostController) {
                     )
             }
         }
+
         Box(
             modifier = Modifier
                 .padding(16.dp)
