@@ -140,8 +140,8 @@ fun ReportScreen(navHostController: NavHostController, carId: Int) {
         CustomButton(title = "جستجو با تاریخ") {
             serviceList = findServicesBetween(
                 allServices,
-                SimpleDate(startDay, startMonth, startYear),
-                SimpleDate(endDay, endMonth, endYear)
+                startDate,
+                endDate
             )
         }
 
@@ -165,7 +165,10 @@ fun ReportScreen(navHostController: NavHostController, carId: Int) {
         openDialog = openStartDialog,
         onSelectDay = {},
         onConfirm = {
-            startDate = "${it.year}/${it.month}/${it.day}"
+            val month = if (it.month< 10) "0${it.month}" else it.month
+            val day = if (it.day< 10) "0${it.day}" else it.day
+
+            startDate = "${it.year}/${month}/${day}"
             startDay = it.day
             startYear = it.year
             startMonth = it.month
@@ -176,7 +179,10 @@ fun ReportScreen(navHostController: NavHostController, carId: Int) {
         openDialog = openEndDialog,
         onSelectDay = {},
         onConfirm = {
-            endDate = "${it.year}/${it.month}/${it.day}"
+            val month = if (it.month< 10) "0${it.month}" else it.month
+            val day = if (it.day< 10) "0${it.day}" else it.day
+
+            endDate = "${it.year}/${month}/${day}"
             endDay = it.day
             endYear = it.year
             endMonth = it.month
@@ -187,38 +193,21 @@ fun ReportScreen(navHostController: NavHostController, carId: Int) {
 
 fun findServicesBetween(
     list: List<Services>,
-    startDate: SimpleDate,
-    endDate: SimpleDate
+    startDate: String,
+    endDate: String
 ): List<Services> {
 
     val foundedList = arrayListOf<Services>()
+    val startIntDate = startDate.replace("/","").toInt()
+    val endIntDate = endDate.replace("/","").toInt()
 
     list.forEach {
-        val day = it.date.substring(8,10).toInt()
-        val year = it.date.substring(0,4).toInt()
-        val month = it.date.substring(5,7).toInt()
-        Log.v("6191" , "item :[year = $year , month =  ${month}, day =  ${day}]")
-
-        if (year < endDate.year && year > startDate.year){
-            foundedList.add(it)
-        }
-        if (year == endDate.year && month <= endDate.month){
-            if (day <= endDate.day){
-                foundedList.add(it)
-            }
-        }
-        if (year == endDate.year && month == endDate.month && day <= endDate.day){
-            foundedList.add(it)
-        }
-        if (year == startDate.year && month >= startDate.month){
-            if (day >= startDate.day){
-                foundedList.add(it)
-            }
-        }
-        if (year == startDate.year && month == startDate.month && day >= startDate.day){
+        val realDate = it.date.replace("/","").toInt()
+        if (realDate in startIntDate..endIntDate){
             foundedList.add(it)
         }
     }
+
     Log.v("6191" , foundedList.toString())
     return foundedList
 }

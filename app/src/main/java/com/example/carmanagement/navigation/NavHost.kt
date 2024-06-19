@@ -46,7 +46,7 @@ fun SetupNavHost(navHostController: NavHostController) {
                 type = NavType.IntType
                 defaultValue = -1
                 nullable = false
-            }
+            },
         )) {
             ReportScreen(navHostController = navHostController , carId = it.arguments!!.getInt("id"))
         }
